@@ -3,7 +3,9 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
 
 // Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY || "your-stripe-secret-will-go-here"
+);
 
 // @desc    Create payment intent
 // @route   POST /api/payments/create-intent
