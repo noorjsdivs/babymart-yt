@@ -3,10 +3,7 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
 
 // Initialize Stripe with secret key
-const stripe = new Stripe(
-  process.env.STRIPE_SECRET_KEY ||
-    "sk_test_51RiuD8Rc67sBILFSBTMvbzsOemTuHm2Ce5HcbFXjRnnfh7vZuZthSlbJ9KBypwUq52GDG0MSC4O8SwCF6HtQuJNz00uiNhfrpK"
-);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 // @desc    Create payment intent
 // @route   POST /api/payments/create-intent
