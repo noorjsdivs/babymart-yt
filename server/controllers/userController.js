@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
+import cloudinary from "../config/cloudinary.js";
 // getUsers
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({}).select("-password");
@@ -74,6 +75,13 @@ const updateUser = asyncHandler(async (req, res) => {
   user.addresses = req.body.addresses || user.addresses;
 
   //   avatar
+  if (req.body.avatar && req.body.avatar !== user.avatar) {
+    // Upload to cloudinary
+    const result = await cloudinary.uploader.upload(req.body.avatar, {
+      folder: "babymartyt/avatars",
+    });
+    user.avatar = result.secure_url;
+  }
   const updatedUser = await user.save();
 
   res.status(200).json({
