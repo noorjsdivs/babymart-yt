@@ -12,9 +12,27 @@ import userRouter from "./routes/user.route.js";
 import productRouter from "./routes/product.route.js";
 import brandRouter from "./routes/brand.route.js";
 import categoryRouter from "./routes/category.route.js";
+import { specs } from "./config/swagger.js";
+
+// Routes Import
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import brandRoutes from "./routes/brandRoutes.js";
+import bannerRoutes from "./routes/bannerRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 // Load env vars
 dotenv.config();
+
+// Connect to database
+connectDB();
 
 const app = express();
 
@@ -68,6 +86,18 @@ app.use("/api/users", userRouter);
 app.use("/api/brands", brandRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/banners", bannerRoutes);
+app.use("/api/stats", statsRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // API Documentation
 app.use(
@@ -77,12 +107,14 @@ app.use(
     explorer: true,
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "BabyShop API Documentation",
+    customSiteTitle: "BabyMart API Documentation",
   })
 );
 
 // Home route
 app.get("/", (req, res) => {
   res.send({ message: "Hello from Server" });
+  res.send({ message: "Server is saying Hello" });
 });
 
 // Health check endpoint
@@ -104,4 +136,6 @@ app.listen(PORT, async () => {
   await connectDB();
   console.log(`🚀 BabyShop API Server is running!`);
   console.log(`📍 Server URL: http://localhost:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`API Server is running!`);
 });
