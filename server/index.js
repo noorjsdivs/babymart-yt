@@ -4,6 +4,14 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import swaggerUi from "swagger-ui-express";
+import specs from "./config/swagger.js";
+
+// Route Imports
+import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
+import productRouter from "./routes/product.route.js";
+import brandRouter from "./routes/brand.route.js";
+import categoryRouter from "./routes/category.route.js";
 import { specs } from "./config/swagger.js";
 
 // Routes Import
@@ -73,6 +81,11 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // Debug middleware for order routes
 
 // Routes
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
+app.use("/api/brands", brandRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -93,12 +106,14 @@ app.use(
   swaggerUi.setup(specs, {
     explorer: true,
     customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "BabyShop API Documentation",
     customSiteTitle: "BabyMart API Documentation",
   })
 );
 
 // Home route
 app.get("/", (req, res) => {
+  res.send({ message: "Hello from Server" });
   res.send({ message: "Server is saying Hello" });
 });
 
@@ -117,6 +132,10 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 8000;
+app.listen(PORT, async () => {
+  await connectDB();
+  console.log(`🚀 BabyShop API Server is running!`);
+  console.log(`📍 Server URL: http://localhost:${PORT}`);
 app.listen(PORT, () => {
   console.log(`API Server is running!`);
 });
