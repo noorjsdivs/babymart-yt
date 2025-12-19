@@ -2,11 +2,19 @@ import express from "express";
 import dotenv from "dotenv";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
+import connectDB from "./config/db.js";
+import swaggerUi from "swagger-ui-express";
+import specs from "./config/swagger.js";
+
+// Route Imports
+import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
+import productRouter from "./routes/product.route.js";
+import brandRouter from "./routes/brand.route.js";
+import categoryRouter from "./routes/category.route.js";
 
 // Load env vars
 dotenv.config();
-
-// Connect to database
 
 const app = express();
 
@@ -55,48 +63,26 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // Debug middleware for order routes
 
 // Routes
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
+app.use("/api/brands", brandRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
 
 // API Documentation
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "BabyShop API Documentation",
+  })
+);
 
 // Home route
 app.get("/", (req, res) => {
-  const projectInfo = {
-    name: "🍼 BabyShop E-commerce API",
-    version: "1.0.0",
-    description: "Backend API server for BabyShop e-commerce platform",
-    status: "Running",
-    environment: process.env.NODE_ENV || "development",
-    port: PORT,
-    endpoints: {
-      documentation: `/api-docs`,
-      health: `/health`,
-      api: `/api/v1`,
-    },
-    features: [
-      "🔐 JWT Authentication",
-      "📦 Product Management",
-      "🛍️ Order Processing",
-      "👥 User Management",
-      "☁️ Cloudinary Integration",
-      "📊 MongoDB Database",
-      "📖 Swagger Documentation",
-    ],
-    applications: {
-      "Admin Dashboard": process.env.ADMIN_URL || "http://localhost:5173",
-      "Client Website": process.env.CLIENT_URL || "http://localhost:3000",
-      "Mobile App": "React Native Application",
-      "API Server": `http://localhost:${PORT} (You are here)`,
-    },
-    quickStart: {
-      development: "npm run dev",
-      production: "npm start",
-      documentation: `Visit http://localhost:${PORT}/api-docs for API documentation`,
-    },
-    message:
-      "🚀 BabyShop API is running successfully! Remove this placeholder and start building your API endpoints.",
-  };
-
-  res.json(projectInfo);
+  res.send({ message: "Hello from Server" });
 });
 
 // Health check endpoint
@@ -114,18 +100,8 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`🚀 BabyShop API Server is running!`);
   console.log(`📍 Server URL: http://localhost:${PORT}`);
-  console.log(
-    `🌐 Client URL: ${process.env.CLIENT_URL || "http://localhost:3000"}`
-  );
-  console.log(
-    `🖥️  Admin URL: ${process.env.ADMIN_URL || "http://localhost:5173"}`
-  );
-  console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
-  console.log(`❤️  Health Check: http://localhost:${PORT}/health`);
-  console.log(`📋 Project Info: http://localhost:${PORT}`);
-  console.log(`⚡ Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`\n🛠️  Ready to start building your e-commerce API!`);
 });

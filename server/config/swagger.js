@@ -4,7 +4,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "BabyShop E-commerce API",
+      title: "BabyAisle E-commerce API",
       version: "1.0.0",
       description:
         "A comprehensive e-commerce API for managing products, orders, users, and analytics",
